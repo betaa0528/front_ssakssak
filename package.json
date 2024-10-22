@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "parcel build index.html",
     "start": "next start",
     "preview": "vite preview",
     "serve": "vite serve"
