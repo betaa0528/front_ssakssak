@@ -362,7 +362,6 @@ onMounted(() => {
 
 /* 직업 목록 카드 배경 이미지 */
 .job-list-card {
-    background-image: url('@/assets/images/joblist.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
