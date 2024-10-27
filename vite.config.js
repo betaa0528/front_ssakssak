@@ -14,8 +14,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://43.200.173.159:8081/backend-1.0-SNAPSHOT',
-        // changeOrigin: true,
+        target: 'process.env.VITE_API_BASE_URL',
+        changeOrigin: true,
       },
     },
   },
