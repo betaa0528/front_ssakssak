@@ -17,6 +17,7 @@ export default defineConfig({
         target: "http://43.200.173.159:8081/backend-1.0-SNAPSHOT",
         // target: "http://localhost:8081",
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''), // `/api` 부분을 `/backend-1.0-SNAPSHOT`으로 대체
       },
     },
   },
