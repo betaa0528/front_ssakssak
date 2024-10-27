@@ -67,6 +67,7 @@ const login = async () => {
     // 로그인 에러
     console.log('에러=======', e);
     error.value = e.response.data;
+    console.log('error.value', error.value);
   }
 };
 
