@@ -5,7 +5,6 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/backend-1.0-SNAPSHOT/",
   plugins: [vue()],
   resolve: {
     alias: {
@@ -16,7 +15,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "http://43.200.173.159:8081/backend-1.0-SNAPSHOT",
-        changeOrigin: true,
+        // changeOrigin: true,
       },
     },
   },
