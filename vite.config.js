@@ -1,26 +1,27 @@
-import { fileURLToPath, URL } from 'node:url';
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/backend-1.0-SNAPSHOT/",
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'process.env.VITE_API_BASE_URL',
+      "/api": {
+        target: "http://43.200.173.159:8081/backend-1.0-SNAPSHOT",
         changeOrigin: true,
       },
     },
   },
   build: {
     // outDir: '../Board_Backend/src/main/webapp/resources',
-    outDir: 'dist'
+    outDir: "dist",
   },
 });
