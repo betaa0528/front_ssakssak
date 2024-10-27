@@ -53,7 +53,7 @@ export const useAuthStore = defineStore("auth", () => {
         "Content-Type": "application/json",
       },
     });
-
+    console.log("auth.js확인합니다 =======>", data);
     const roles = data.authorities.map((auth) => auth.authority);
     state.value = { ...data, roles: roles };
     localStorage.setItem("auth", JSON.stringify(state.value));
