@@ -42,7 +42,7 @@ export const useAuthStore = defineStore("auth", () => {
     // state.value.token = 'test token';
     // state.value.user = { : member.id, email: member.id + '@test.com' }   ;
     // api 호출
-    const url = "http://43.200.173.159:8081/backend-1.0-SNAPSHOT/api/auth/login";
+    const url = "/api/auth/login";
     // if (type === "student") {
     //   url = "/api/student/auth/login";
     // } else if (type === "teacher") {
