@@ -49,18 +49,14 @@ export const useAuthStore = defineStore("auth", () => {
     //   url = "/api/teacher/auth/login";
     // }
     console.log("auth.js확인합니다 =======>", url);
-    try {
-      const { data } = await axios.post(url, member, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const roles = data.authorities.map((auth) => auth.authority);
-      state.value = { ...data, roles: roles };
-      localStorage.setItem("auth", JSON.stringify(state.value));
-    } catch (error) {
-      console.log("ehcodododoo", error);
-    }
+    const { data } = await axios.post(url, member, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const roles = data.authorities.map((auth) => auth.authority);
+    state.value = { ...data, roles: roles };
+    localStorage.setItem("auth", JSON.stringify(state.value));
   };
 
   // 로그인 요청을 보내고, 서버로부터 받은 인증 정보를 상태와 localStorage에 저장하는 역할
