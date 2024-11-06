@@ -48,12 +48,12 @@ export const useAuthStore = defineStore("auth", () => {
     // } else if (type === "teacher") {
     //   url = "/api/teacher/auth/login";
     // }
+    console.log("auth.js확인합니다 =======>", data);
     const { data } = await axios.post(url, member, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log("auth.js확인합니다 =======>", data);
     const roles = data.authorities.map((auth) => auth.authority);
     state.value = { ...data, roles: roles };
     localStorage.setItem("auth", JSON.stringify(state.value));
