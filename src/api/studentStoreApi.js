@@ -27,6 +27,7 @@ export default {
 
   async buyCoupon(request) {
     try {
+      console.log("쿠폰 구매 정보 ", request);
       const response = await api.post(`${BASE_URL}/buy`, request.value);
       return response;
     } catch (error) {
@@ -36,8 +37,14 @@ export default {
   },
 
   async getStudentCoupons(stdId) {
-    const { data } = await api.get(`${BASE_URL}/mycp/${stdId}`);
-    console.log('Student coupons GET', data);
+    const { data } = await api.get(`${BASE_URL}/mycp`);
+    console.log("Student coupons GET", data);
     return data;
-},
+  },
+
+  async usageCoupon(cpName) {
+    console.log(cpName);
+    const response = await api.post(`${BASE_URL}/use`, cpName);
+    return response;
+  },
 };
