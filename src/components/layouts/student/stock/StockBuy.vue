@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import api from '@/api/studentStockApi';
 import { useStockStore } from '@/stores/stockStore';
+import StockVolume from './StockVolume.vue';
 
 const authStore = useAuthStore();
 const nowQuantity = ref('');
@@ -108,6 +109,9 @@ const closePop = () => {
                 <div class="mb-3">
                     <span class="d-block fs-5">주문 금액:</span>
                     <span class="fw-bold">{{ buyTotal }} 씨드</span>
+                </div>
+                <div class="mb-3">
+                    <StockVolume />
                 </div>
             </div>
 
