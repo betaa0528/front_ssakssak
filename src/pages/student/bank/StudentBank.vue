@@ -25,9 +25,8 @@
           </thead>
           <tbody>
             <!-- 적금 리스트를 순회하며 행을 생성 -->
-            <tr v-for="(item, index) in depositAccount" :key="index">
-              <td>{{ item.startDate[0] + '-' + (item.startDate[1] < 10 ? '0' + item.startDate[1] : item.startDate[1])
-                + '-' + (item.startDate[2] < 10 ? '0' + item.startDate[2] : item.startDate[2]) }}</td>
+            <tr v-for="(item, index) in depositAccount" :key="index" v-if="depositAccount && depositAccount.length">
+              <td>{{item.startDate}}</td>
               <td>{{ item.endDate[0] + '-' + (item.endDate[1] < 10 ? '0' + item.endDate[1] : item.endDate[1]) + '-' +
                 (item.endDate[2] < 10 ? '0' + item.endDate[2] : item.endDate[2]) }}</td>
               <td>{{ item.depositName }}</td>
@@ -263,6 +262,8 @@ onMounted(async () => {
   await bankStore.fetchDepositAccount();
   await bankStore.fetchSavingList();
   await bankStore.fetchSavingAccount();
+  await console.log('======>', depositAccount.value[0].startDate.split('-'));
+
 });
 
 console.log(depositAccount);
@@ -357,6 +358,7 @@ const subscribeToSaving = async () => {
 
   const request = {
     savingId: selectedSaving.savingId,
+    savingName: selectedSaving.savingName,
     rate: selectedSaving.rate,
     depositAmount: subscriptionAmount.value,
     startDate: formatDate(currentDate),
@@ -402,7 +404,7 @@ const products = computed(() => {
   const arr = [];
   const depositCopy = [...depositList.value];
   const savingCopy = [...savingList.value];
-  for(const deposit of depositCopy) {
+  for (const deposit of depositCopy) {
     arr.push({
       name: deposit.depositName,
       maxDeposit: deposit.maxDeposit,
@@ -411,13 +413,13 @@ const products = computed(() => {
     })
   };
 
-  for(const saving of savingCopy) {
+  for (const saving of savingCopy) {
     arr.push({
-        name: saving.savingName,
-        maxDeposit: saving.maxDeposit,
-        depositPeriod: saving.savingPeriod,
-        rate: saving.rate,
-      })
+      name: saving.savingName,
+      maxDeposit: saving.maxDeposit,
+      depositPeriod: saving.savingPeriod,
+      rate: saving.rate,
+    })
   }
   return arr;
 });
@@ -448,18 +450,19 @@ const calculateInterest = () => {
     let interest = 0;
 
     console.log('name', selProduct.name);
-    
+    console.log('이율', selProduct.rate)
+
     // 예금 이자 계산
-    if(selProduct.name.endsWith('예금')) {
+    if (selProduct.name.endsWith('예금')) {
       const months = depositPeriod / 4; // 예금 기간을 월로 변환 (주 -> 월)
       interest = depositAmount.value * (interestRate / 100) * months;
     }
 
     // 적금 이자 계산 (매주 납입, 총 금액과 이자를 계산)
-    if(selProduct.name.endsWith('적금')) {
+    if (selProduct.name.endsWith('적금')) {
       const weeks = depositPeriod / 7; // 적금 기간을 주로 변환 (일 -> 주)
       const totalDeposits = depositAmount.value * weeks; // 총 납입 금액
-      
+
       // 적금은 매주 납입하므로, 매주 납입 금액에 대해 주당 이자를 계산하고 합산
       // 적금이기 때문에 매주 적립한 금액에 이자가 붙고, 평균 절반 기간만큼 이자를 받음
       interest = totalDeposits * (interestRate / 100 / 12); // 이자율을 월 기준으로 계산
