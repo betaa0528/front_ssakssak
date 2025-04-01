@@ -20,7 +20,7 @@ const highest = computed(() => {
 const generateCandleData = (stockPrice) => {
 
     if (!stockPrice || isNaN(stockPrice)) {
-        return [0, 0, 0, 0];  
+        return [0, 0, 0, 0];
     }
 
     const open = parseInt(stockPrice + (Math.random() * 10 - 4));  // +- 5 범위에서 오픈 가격 생성
@@ -44,7 +44,7 @@ const transformData = (data) => {
 
 const series = ref([{
     name: 'Stock Prices',
-    data: transformData(chartData.value) 
+    data: transformData(chartData.value)
 }]);
 
 
@@ -55,6 +55,14 @@ watch(chartData, (newData) => {
 const chartOptions = ref({
     chart: {
         id: 'basic-bar',
+    },
+    plotOptions: {
+        candlestick: {
+            colors: {
+                upward: '#3C90EB',
+                downward: '#DF7D46'
+            }
+        }
     },
     height: '100%',
     xaxis: {
@@ -83,7 +91,7 @@ const chartOptions = ref({
 </template>
 
 <style scoped>
-.container{
+.container {
     background-color: #fff;
     border-radius: 20px;
 }

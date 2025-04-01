@@ -75,6 +75,7 @@ let eventSource;
 
 const fetchAlarmHistory = async () => {
   try {
+    console.log("store.username ====> ", store.username);
     const response = await api.getAlarmHistory(store.username);
     console.log(response);
     if (response.length === 0) {
@@ -94,7 +95,8 @@ const fetchAlarmHistory = async () => {
 
 const checkAlarm = async (id, idx) => {
   try {
-    const response = await api.postCheckAlarm(id)
+    console.log('alarm Id ===============> ', id);
+    const response = await api.postCheckAlarm(id);
     alarms.value.splice(idx, 1);
     console.log(alarms.value.length);
     if (alarms.value.length === 0) {
@@ -111,20 +113,23 @@ onMounted(async () => {
   if (store.roles[0] === 'ROLE_TEACHER') {
     try {
       loginCheck.value = true;
-      await fetchAlarmHistory();
       const username = store.username;
       const token = store.getToken();
+      console.log('선생님 아이디 : ', username);
+      eventSource = await new EventSource(`/api/alarm/subscribe/${username}`);
+      console.log('eventSource ==============> ', eventSource);
 
-      eventSource = new EventSource(`/api/alarm/subscribe/${username}`);
 
       eventSource.addEventListener('alarm', (event) => {
         const alarm = JSON.parse(event.data);
-        alarms.value = [...alarms.value, { id: alarm.id, message: alarm.message }];
+        alarms.value.push({ id: alarm.id, message: alarm.message });
         alarmColor.value = true;
+        console.log('알림 수신:', event.data);
       });
       eventSource.onerror = (error) => {
         console.error("Error with SSE connection", error);
       }
+      // await fetchAlarmHistory();
     }
 
     catch (error) {

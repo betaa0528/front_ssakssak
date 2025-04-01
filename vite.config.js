@@ -12,9 +12,11 @@ export default defineConfig({
     },
   },
   server: {
+    host: "0.0.0.0",
+    port: 21000,
     proxy: {
       "/api": {
-        target: "http://43.200.173.159:8081/backend-1.0-SNAPSHOT",
+        target: "http://localhost:8081/",
         changeOrigin: true,
       },
     },
@@ -22,4 +24,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
+  // build: {
+  //   outDir: "../ssakssak/src/main/webapp/resources",
+  // },
 });

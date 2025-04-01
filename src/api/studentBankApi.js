@@ -26,16 +26,16 @@ export default {
   },
   async getSavingAccount() {
     try {
-        const {data} = await api.get(`${BASE_URL}/saving-account`);
-        return data;
-    } catch(error) {
-        console.error(error);
-        throw error;
+      const { data } = await api.get(`${BASE_URL}/saving-account`);
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   },
   async subscribeSaving(request) {
     try {
-      console.log("request", request);
+      console.log("saving Account DTO", request);
       const response = await api.post(`${BASE_URL}/product`, request);
       return response;
     } catch (error) {
@@ -45,20 +45,20 @@ export default {
   },
   async cancelDeposit(id) {
     try {
-        const response = await api.post(`${BASE_URL}/deposit/cancel/${id}`);
-        console.log(response);
-    }  catch (error) {
-        console.error(error);
-        throw error;
-      }
+      const response = await api.post(`${BASE_URL}/deposit/cancel/${id}`);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
   async cancelSaving(id) {
     try {
-        const response = await api.post(`${BASE_URL}/saving/cancel/${id}`);
-        console.log(response);
-    }  catch (error) {
-        console.error(error);
-        throw error;
-      }
-  }
+      const response = await api.post(`${BASE_URL}/saving/cancel/${id}`);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
 };

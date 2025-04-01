@@ -14,12 +14,12 @@ export default {
     }
   },
 
-   // 쿠폰 등록 API 호출
-   async applyCoupon(storeDTO, file) {
+  // 쿠폰 등록 API 호출
+  async applyCoupon(storeDTO, file) {
     try {
       // FormData 객체 생성
       const formData = new FormData();
-      
+
       // storeDTO를 JSON 문자열로 변환하여 추가
       formData.append("storeDTO", JSON.stringify(storeDTO));
 
@@ -34,5 +34,10 @@ export default {
       console.error("Failed to apply coupon:", error);
       throw error;
     }
-  }
+  },
+
+  async getTodayUsageCoupon() {
+    const data = await api.get(`/api/teacher/home/usage`);
+    return data;
+  },
 };

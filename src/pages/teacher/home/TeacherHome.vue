@@ -7,7 +7,8 @@ import Treasury from './treasury.vue';
 </script>
 
 <template>
-    <div class="container mt-3" style="width: 100vw;">
+
+    <div class="container mt-3" style="width: 80vw;">
         <div class="row">
             <div class="chart col-12 mb-6">
                 <StockChart />
@@ -22,7 +23,6 @@ import Treasury from './treasury.vue';
                 <Treasury />
             </div>
         </div>
-
     </div>
 </template>
 

@@ -42,12 +42,12 @@ export const useAuthStore = defineStore("auth", () => {
     // state.value.token = 'test token';
     // state.value.user = { : member.id, email: member.id + '@test.com' }   ;
     // api 호출
-    const url = "/api/auth/login";
-    // if (type === "student") {
-    //   url = "/api/student/auth/login";
-    // } else if (type === "teacher") {
-    //   url = "/api/teacher/auth/login";
-    // }
+    let url = "/api/auth/login";
+    if (type === "student") {
+      url = "/api/student/auth/login";
+    } else if (type === "teacher") {
+      url = "/api/teacher/auth/login";
+    }
     console.log("auth.js확인합니다 =======>", url);
     const { data } = await axios.post(url, member, {
       headers: {

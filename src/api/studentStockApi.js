@@ -76,4 +76,14 @@ export default {
       }
     }
   },
+
+  async getOrderBook() {
+    try {
+      const response = await api.get(`${BASE_URL}/orderBook`);
+      return response;
+    } catch (error) {
+      console.error("Error updating news status:", error);
+      throw error;
+    }
+  },
 };

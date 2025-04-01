@@ -95,15 +95,15 @@ const confirmBuy = async () => {
     try {
         buyRequest.value.quantity = quantity.value;
         const response = await api.buyCoupon(buyRequest);
-        console.log(response);
+        console.log("buy==============================> ", response);
         if (response && response.status === 200) {
             props.coupon.cpQuantity -= quantity.value;
             emit('couponBuy', { couponId: props.couponId, coupon: props.coupon });
             closeConfirmModal();
             purchaseCompleteModal.value = true;
-
         }
     } catch (error) {
+        console.log(error.response);
         errorMsg.value = error.response.data;
         console.error('쿠폰 사기 실패', error);
         closeConfirmModal();

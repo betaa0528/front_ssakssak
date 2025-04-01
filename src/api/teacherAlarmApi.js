@@ -13,10 +13,11 @@ export default {
 
   async postCheckAlarm(id) {
     const response = await api.post(`${BASE_URL}/checked/${id}`);
+    return response;
   },
 
-//   async createEventSource(username) {
-//     const response = new EventSource(`${BASE_URL}/subscribe/${username}`);
-//     return response;
-//   },
+  //   async createEventSource(username) {
+  //     const response = new EventSource(`${BASE_URL}/subscribe/${username}`);
+  //     return response;
+  //   },
 };

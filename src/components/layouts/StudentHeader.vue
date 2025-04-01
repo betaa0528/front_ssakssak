@@ -1,42 +1,18 @@
 <template>
   <div class="header">
-    <!-- 알림 버튼 -->
-    <!-- <div v-if="loginCheck" class="notification" @click="toggleNotificationModal">
-      <i class="bi bi-bell-fill" :style="alarmColor ? 'color:green;' : 'color:white;'"></i>
-    </div> -->
-
-    <!-- 환영 메시지 -->
-    <div class="welcome" v-if="isLogin">
-      {{ name }} 학생 환영합니다!
-    </div>
-
-    <!-- 로그아웃 버튼 -->
-    <div class="logout" @click="logout" v-if="isLogin">
-      <i class="fas fa-sign-out-alt"></i> 로그아웃
-    </div>
-
-    <!-- 알림 모달 -->
-    <!-- <div v-if="isNotificationModalOpen" class="modal-overlay" @click.self="toggleNotificationModal">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="notifications-container">
-            <ul class="px-4">
-              <li v-for="(alarm, idx) in alarms" :key="idx" class="notification-item"
-                @click="checkAlarm(alarm.id, idx)">
-                <i class="bi bi-info-circle-fill"></i>
-                <div class="m-auto">
-                  {{ alarm }}
-                  <p>{{ alarm.message }}</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <button @click="toggleNotificationModal" class="close-btn mt-3">닫기</button>
-          </div>
+    <div class="d-flex flex-row justify-content-between align-items-center">
+      <div class="ms-3">
+        <span v-if="couponUsage">쿠폰 사용중</span>
+      </div>
+      <div class="d-flex me-6">
+        <div class="welcome me-3" v-if="isLogin">
+          {{ name }} 학생 환영합니다!
+        </div>
+        <div class="logout" @click="logout" v-if="isLogin">
+          <i class="fas fa-sign-out-alt"></i> 로그아웃
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -50,6 +26,7 @@ import api from '@/api/teacherAlarmApi';
 // 스토어와 라우터 설정
 const router = useRouter();
 const store = useAuthStore();
+const couponUsage = ref(true);
 
 // 로그인 상태와 학생 이름 확인
 const name = computed(() => store.name);
@@ -146,10 +123,7 @@ onUnmounted(() => {
 .header {
   background-color: #473221;
   height: 50px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 20px;
+  /* padding: 0 20px; */
   color: #f8f6e9;
   width: 100%;
 }
@@ -163,6 +137,7 @@ onUnmounted(() => {
 .welcome {
   font-size: 16px;
   margin-right: 20px;
+  line-height: 50px;
 }
 
 .logout {
