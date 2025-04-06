@@ -10,12 +10,15 @@ axios.defaults.paramsSerializer = (params) => {
 };
 
 const instance = axios.create({
-  timeout: 1000,
+  timeout: 5000,
+  baseURL: "",
+  withCredentials: true, // 쿠키 사용 시 필요
 });
 
 // 요청 인터셉터
 instance.interceptors.request.use(
   (config) => {
+    console.log("[axios 요청 URL]", config.baseURL + config.url);
     // JWT 추출
     const { getToken } = useAuthStore();
     const token = Cookies.get("jwt") || getToken();

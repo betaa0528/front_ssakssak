@@ -1,6 +1,7 @@
 import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
-import axios from "axios";
+// import axios from "axios";
+import axios from "@/api/index";
 
 const initState = {
   username: "",
@@ -53,6 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
     const roles = data.authorities.map((auth) => auth.authority);
     state.value = { ...data, roles: roles };

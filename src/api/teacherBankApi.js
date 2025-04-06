@@ -5,6 +5,7 @@ const BASE_URL = "/api/teacher";
 export default {
   async getSavingList() {
     const { data } = await api.get(`${BASE_URL}/bank/saving-list`);
+    console.log(`요청 확인 =====================> ${BASE_URL}/bank/saving-list`);
     return data;
   },
   async addSaving(request) {
