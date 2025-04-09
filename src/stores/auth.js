@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import axios from "@/api/index";
 
 const initState = {
+  stdId: null,
   username: "",
   name: "",
   roles: [],
@@ -58,6 +59,8 @@ export const useAuthStore = defineStore("auth", () => {
     });
     const roles = data.authorities.map((auth) => auth.authority);
     state.value = { ...data, roles: roles };
+    const { data: profile } = await axios.get("/api/student/profile");
+    state.value.stdId = profile.stdId;
     localStorage.setItem("auth", JSON.stringify(state.value));
   };
 
