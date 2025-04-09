@@ -136,12 +136,11 @@
             </div>
             <div class="transaction-item" v-for="(item, index) in transactions" :key="index">
               <div class="transaction-date">{{ item.date }}</div>
-              <div class="transaction-desc">{{ item.description }}</div>
-              <div class="transaction-amount"
-                :class="{ 'income': item.type === 'income', 'expense': item.type === 'expense' }">
-                {{ item.type === 'income' ? '+' : '-' }}{{ item.amount }} 씨드
+              <div class="transaction-desc">{{ item.reason }}</div>
+              <div class="transaction-amount" :class="{ 'income': item.type === '수입', 'expense': item.type === '지출' }">
+                {{ item.type === '수입' ? '+' : '-' }}{{ item.amount }} 씨드
               </div>
-              <div class="transaction-balance">{{ item.balance }} 씨드</div>
+              <div class="transaction-balance">{{ item.balanceAfter }} 씨드</div>
             </div>
             <div class="pagination">
               <button class="pagination-btn" @click="prevPage" :disabled="currentPage === 1">
@@ -164,11 +163,11 @@
             </div>
             <div class="transaction-item" v-for="(item, index) in incomeTransactions" :key="index">
               <div class="transaction-date">{{ item.date }}</div>
-              <div class="transaction-desc">{{ item.description }}</div>
+              <div class="transaction-desc">{{ item.reason }}</div>
               <div class="transaction-amount income">
                 +{{ item.amount }} 씨드
               </div>
-              <div class="transaction-balance">{{ item.balance }} 씨드</div>
+              <div class="transaction-balance">{{ item.balanceAfter }} 씨드</div>
             </div>
             <div class="pagination">
               <button class="pagination-btn" @click="prevIncomePage" :disabled="incomeCurrentPage === 1">
@@ -191,11 +190,11 @@
             </div>
             <div class="transaction-item" v-for="(item, index) in expenseTransactions" :key="index">
               <div class="transaction-date">{{ item.date }}</div>
-              <div class="transaction-desc">{{ item.description }}</div>
+              <div class="transaction-desc">{{ item.reason }}</div>
               <div class="transaction-amount expense">
                 -{{ item.amount }} 씨드
               </div>
-              <div class="transaction-balance">{{ item.balance }} 씨드</div>
+              <div class="transaction-balance">{{ item.balanceAfter }} 씨드</div>
             </div>
             <div class="pagination">
               <button class="pagination-btn" @click="prevExpensePage" :disabled="expenseCurrentPage === 1">
@@ -215,13 +214,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useStockStore } from '@/stores/stockStore';
-import api from '@/api/studentStockApi';
+import { useProfileStore } from '@/stores/profileStore';
+import { useAuthStore } from '@/stores/auth';
 
 // 스토어 및 API 데이터
 const stockStore = useStockStore();
-const myStock = computed(() => stockStore.myStock);
+const profileStore = useProfileStore();
+const authStore = useAuthStore();
+const stdId = computed(() => authStore.state.stdId);
 
 // 탭 관리
 const tabs = ['전체 내역', '수입 내역', '지출 내역'];
@@ -234,38 +236,22 @@ const incomeCurrentPage = ref(1);
 const expenseCurrentPage = ref(1);
 
 // 자산 데이터
-const totalAssets = ref(12500);
+const totalAssets = ref(0);
 const totalIncome = ref(15000);
 const totalExpense = ref(2500);
 const currentProfit = ref(8.5);
 
 // 자산 분포 데이터
 const assetItems = ref([
-  { label: '예수금', value: 1000 },
-  { label: '주식', value: 4500 },
-  { label: '적금', value: 3000 }
+  { label: '예수금', value: 0 },
+  { label: '주식', value: 0 },
+  { label: '적금', value: 0 }
 ]);
-const assetColors = ['#00A3FF', '#FF6940', '#FAB809'];
+const assetColors = ['#00A3FF', '#FF6940', '#FAB809', '#06f202'];
 
 // 수익률 추이 데이터
 const profitTrendData = ref([2, 5, 3, 7, 4, 8.5]);
 const trendMonths = ['1월', '2월', '3월', '4월', '5월', '6월'];
-
-// 거래 내역 데이터 (실제로는 API에서 가져올 것)
-const allTransactions = ref([
-  { date: '2023-06-01', description: '월급 수령', amount: 3000, type: 'income', balance: 8000 },
-  { date: '2023-06-03', description: '주식 매수', amount: 1500, type: 'expense', balance: 6500 },
-  { date: '2023-06-05', description: '적금 입금', amount: 500, type: 'expense', balance: 6000 },
-  { date: '2023-06-10', description: '주식 배당금', amount: 200, type: 'income', balance: 6200 },
-  { date: '2023-06-15', description: '월급 수령', amount: 3000, type: 'income', balance: 9200 },
-  { date: '2023-06-18', description: '물건 구매', amount: 300, type: 'expense', balance: 8900 },
-  { date: '2023-06-20', description: '주식 매도', amount: 2000, type: 'income', balance: 10900 },
-  { date: '2023-06-25', description: '적금 입금', amount: 500, type: 'expense', balance: 10400 },
-  { date: '2023-06-28', description: '보너스', amount: 1500, type: 'income', balance: 11900 },
-  { date: '2023-06-30', description: '물건 구매', amount: 400, type: 'expense', balance: 11500 },
-  { date: '2023-07-01', description: '월급 수령', amount: 3000, type: 'income', balance: 14500 },
-  { date: '2023-07-05', description: '주식 매수', amount: 2000, type: 'expense', balance: 12500 }
-]);
 
 // 계산된 속성들
 const assetSegments = computed(() => {
@@ -308,7 +294,7 @@ const totalPages = computed(() => {
 
 // 수입 내역만 필터링
 const allIncomeTransactions = computed(() => {
-  return allTransactions.value.filter(item => item.type === 'income');
+  return allTransactions.value.filter(item => item.type === '수입');
 });
 
 const incomeTransactions = computed(() => {
@@ -323,7 +309,7 @@ const incomeTotalPages = computed(() => {
 
 // 지출 내역만 필터링
 const allExpenseTransactions = computed(() => {
-  return allTransactions.value.filter(item => item.type === 'expense');
+  return allTransactions.value.filter(item => item.type === '지출');
 });
 
 const expenseTransactions = computed(() => {
@@ -381,14 +367,29 @@ const nextExpensePage = () => {
   }
 };
 
+
+const finance = ref([]);
+const allTransactions = ref([]);
+const deposits = ref([]);
+const savings = ref([]);
+const stocks = ref([]);
+const seed = ref(0);
 // 데이터 초기화
 onMounted(async () => {
   try {
-    // 실제 API 호출로 대체할 수 있습니다
-    // const stockData = await api.getMyStock();
-    // myStock.value = stockData;
-
-    // 여기에 거래 내역, 자산 정보 등을 가져오는 API 호출을 추가할 수 있습니다
+    await console.log(authStore.state.stdId);
+    allTransactions.value = await profileStore.fetchMyTransactions(stdId.value);
+    finance.value = await profileStore.fetchFinanceProfile(stdId.value);
+    deposits.value = finance.value.deposits;
+    savings.value = finance.value.savings;
+    stocks.value = finance.value.stocks;
+    totalAssets.value = finance.value.seedBalance;
+    assetItems.value = [
+      { label: '예수금', value: totalAssets.value },
+      { label: '주식', value: stocks.value.currentValue },
+      { label: '적금', value: savings.value[0].totalAmount },
+      { label: '예금', value: deposits.value[0].depositAmount }
+    ];
   } catch (error) {
     console.error('데이터 로딩 중 오류 발생:', error);
   }
