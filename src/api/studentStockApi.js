@@ -64,19 +64,6 @@ export default {
     }
   },
 
-  async getStudentProfile() {
-    try {
-      const response = await api.get(`/student/profile/${stdId}`);
-      return response;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        errorMsg.value = error.response.data;
-      } else {
-        errorMsg.value = "알 수 없는 오류가 발생했습니다!";
-      }
-    }
-  },
-
   async getOrderBook() {
     try {
       const response = await api.get(`${BASE_URL}/orderBook`);
